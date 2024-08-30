@@ -1,3 +1,6 @@
+import sys
+sys.setrecursionlimit(1500)
+
 input = [
     [8, 2, 0, 0, 0, 1, 0, 3, 6],
     [3, 0, 0, 8, 6, 0, 9, 0, 0],
@@ -10,17 +13,23 @@ input = [
     [2, 8, 0, 7, 0, 0, 0, 6, 5]
 ]
 
-valid = [
-    [8, 2, 9, 4, 7, 1, 5, 3, 6],
-    [3, 4, 7, 8, 6, 5, 9, 1, 2],
-    [1, 5, 6, 9, 2, 3, 7, 8, 4],
-    [4, 1, 8, 2, 9, 7, 6, 5, 3],
-    [7, 9, 5, 3, 8, 6, 2, 4, 1],
-    [6, 3, 2, 1, 5, 4, 8, 7, 9],
-    [5, 7, 4, 6, 3, 2, 1, 9, 8],
-    [9, 6, 1, 5, 4, 8, 3, 2, 7],
-    [2, 8, 3, 7, 1, 9, 4, 6, 5]
-]
+def solve(puzzle):
+    find = index_of_blank(puzzle)
+    # boolean have we found solution
+    if not find:
+        return True
+    else:
+        row, col = find 
+    
+    for value in range(1, 10):
+        if check(puzzle, value, (row, col)):
+            puzzle[row][col] = value
+        
+        if solve(puzzle):
+            return True
+        # reset value if invalid
+        puzzle[row][col] = 0
+    return False
 
 def check(puzzle, number, position):
     """
@@ -36,12 +45,12 @@ def check(puzzle, number, position):
     # row
     for item in range(len(puzzle[0])):
         if puzzle[position[0]][item] == number and position[1] != item:
-            print("number already in row")
+            # print("number already in row")
             return False
     # column
     for item in range(len(puzzle)):
         if puzzle[item][position[1]] == number and position[0] != item:
-            print("number already in column")
+            # print("number already in column")
             return False
     # square 
     box_y = position[0]//3
@@ -50,7 +59,7 @@ def check(puzzle, number, position):
     for item_y in range(box_y*3, box_y*3 + 3):
         for item_x in range(box_x*3, box_x*3 + 3):
             if puzzle[item_y][item_x] == number and (item_y, item_x) != position:
-                print("number already in box")
+                # print("number already in box")
                 return False
 
 
@@ -84,6 +93,7 @@ def index_of_blank(puzzle):
                 return (row, column)
     return
 
-# print_puzzle(input)
-# print(index_of_blank(input))
-# check(input, 9, (0, 2))
+print_puzzle(input)
+solve(input)
+print("___________________")
+print_puzzle(input)
